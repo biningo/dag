@@ -1,0 +1,66 @@
+package com.hiwuyue.dag;
+
+import com.hiwuyue.dag.utils.ThreadUtil;
+
+public class DagNode {
+    private String name;
+
+    private volatile DagNodeState state = DagNodeState.PENDING;
+
+    private final DagTask task;
+
+    public DagNode(DagTask task) {
+        this.task = task;
+    }
+
+    @Override
+    public boolean equals(Object outer) {
+        if (outer == this) {
+            return true;
+        }
+        if (!(outer instanceof DagNode)) {
+            return false;
+        }
+        DagNode outerNode = (DagNode) outer;
+        return this.name.equals(outerNode.name);
+    }
+
+    public synchronized void setState(DagNodeState state) {
+        this.state = state;
+    }
+
+    public synchronized DagNodeState getState() {
+        return this.state;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public DagTask getTask() {
+        return task;
+    }
+
+    public void startTask() {
+        this.setState(DagNodeState.RUNNING);
+        try {
+            ThreadUtil.singleThread(this.task);
+            this.setState(DagNodeState.SUCCESSFUL);
+        } catch (Exception err) {
+            this.setState(DagNodeState.FAILED);
+        }
+    }
+
+    public boolean finished() {
+        DagNodeState state = this.getState();
+        return state != DagNodeState.SUCCESSFUL && state != DagNodeState.FAILED;
+    }
+
+    public boolean started() {
+        return this.getState() != DagNodeState.PENDING;
+    }
+}
