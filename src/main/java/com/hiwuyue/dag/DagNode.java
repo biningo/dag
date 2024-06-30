@@ -45,22 +45,28 @@ public class DagNode {
         return task;
     }
 
-    public void startTask() {
+    public void runTask() {
+        task.run();
+    }
+
+    public void start() {
         this.setState(DagNodeState.RUNNING);
-        try {
-            ThreadUtil.singleThread(this.task);
-            this.setState(DagNodeState.SUCCESSFUL);
-        } catch (Exception err) {
-            this.setState(DagNodeState.FAILED);
-        }
     }
 
-    public boolean finished() {
+    public void success() {
+        this.setState(DagNodeState.SUCCESSFUL);
+    }
+
+    public void fail() {
+        this.setState(DagNodeState.FAILED);
+    }
+
+    public boolean isFinished() {
         DagNodeState state = this.getState();
-        return state != DagNodeState.SUCCESSFUL && state != DagNodeState.FAILED;
+        return state == DagNodeState.SUCCESSFUL || state == DagNodeState.FAILED;
     }
 
-    public boolean started() {
-        return this.getState() != DagNodeState.PENDING;
+    public boolean isPending() {
+        return this.getState() == DagNodeState.PENDING;
     }
 }

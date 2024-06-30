@@ -1,16 +1,38 @@
 package com.hiwuyue.dag;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.hiwuyue.dag.utils.ThreadUtil;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class DagSchedulerImpl implements DagScheduler {
 
     private DagGraph dagGraph;
 
+    private ThreadPoolExecutor executor;
+
     public DagSchedulerImpl(DagGraph dagGraph) {
         this.dagGraph = dagGraph;
+        setDefaultExecutor();
+    }
+
+    public DagSchedulerImpl(DagGraph dagGraph, ThreadPoolExecutor executor) {
+        this.dagGraph = dagGraph;
+        this.executor = executor;
+    }
+
+    private void setDefaultExecutor() {
+        this.executor = new ThreadPoolExecutor(
+            10, 100,
+            0, TimeUnit.SECONDS,
+            new SynchronousQueue<>(),
+            new ThreadFactoryBuilder().setNameFormat("dag-scheduler-%d").build(),
+            new ThreadPoolExecutor.AbortPolicy()
+        );
     }
 
     @Override
@@ -26,10 +48,11 @@ public class DagSchedulerImpl implements DagScheduler {
             ArrayList<DagNode> readyNodes = new ArrayList<>();
             int finishedCount = 0;
             for (DagNode node : nodes) {
-                if (node.finished()) {
+                if (node.isFinished()) {
                     finishedCount++;
+                    continue;
                 }
-                if (node.started()) {
+                if (!node.isPending()) {
                     continue;
                 }
 
@@ -41,7 +64,7 @@ public class DagSchedulerImpl implements DagScheduler {
 
                 boolean prevNodesFinished = true;
                 for (DagNode prevNode : prevNodes) {
-                    if (!prevNode.finished()) {
+                    if (!prevNode.isFinished()) {
                         prevNodesFinished = false;
                         break;
                     }
@@ -53,13 +76,13 @@ public class DagSchedulerImpl implements DagScheduler {
             }
 
             for (DagNode readyNode : readyNodes) {
-                readyNode.startTask();
+                readyNode.start();
+                this.executor.execute(new DagNodeRunner(readyNode));
             }
 
-            if (readyNodes.isEmpty() && finishedCount == nodes.size()) {
+            if (finishedCount == nodes.size()) {
                 break;
             }
-
             ThreadUtil.sleepIgnoreInterrupt(10);
         }
     }
@@ -70,5 +93,23 @@ public class DagSchedulerImpl implements DagScheduler {
 
     public void setDagGraph(DagGraph dagGraph) {
         this.dagGraph = dagGraph;
+    }
+
+    private static class DagNodeRunner implements Runnable {
+        private final DagNode node;
+
+        public DagNodeRunner(DagNode node) {
+            this.node = node;
+        }
+
+        @Override
+        public void run() {
+            try {
+                node.runTask();
+                node.success();
+            } catch (Exception err) {
+                node.fail();
+            }
+        }
     }
 }
