@@ -92,6 +92,7 @@ public class DagSchedulerImpl implements DagScheduler {
             }
             ThreadUtil.sleepIgnoreInterrupt(10);
         }
+        this.running.set(false);
     }
 
     @Override
@@ -126,5 +127,10 @@ public class DagSchedulerImpl implements DagScheduler {
                 node.fail();
             }
         }
+    }
+
+    @Override
+    public boolean isRunning() {
+        return running.get();
     }
 }
