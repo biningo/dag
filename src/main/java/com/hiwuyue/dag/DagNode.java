@@ -1,6 +1,5 @@
 package com.hiwuyue.dag;
 
-import com.hiwuyue.dag.utils.ThreadUtil;
 
 public class DagNode {
     private String name;
@@ -45,7 +44,7 @@ public class DagNode {
         return task;
     }
 
-    public void runTask() {
+    public void runTask() throws Exception {
         task.run();
     }
 

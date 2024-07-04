@@ -1,4 +1,6 @@
 package com.hiwuyue.dag;
 
-public interface DagTask extends Runnable {
+public interface DagTask {
+
+    void run() throws Exception;
 }
