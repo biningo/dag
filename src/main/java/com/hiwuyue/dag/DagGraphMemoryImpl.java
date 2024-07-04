@@ -9,9 +9,16 @@ import java.util.Map;
 import java.util.Set;
 
 public class DagGraphMemoryImpl implements DagGraph {
-    private Set<DagNode> dagNodes;
 
-    private Map<DagNode, Set<DagNode>> dagNodeDependencies;
+    private final String name;
+
+    private final Set<DagNode> dagNodes = new HashSet<>();
+
+    private final Map<DagNode, Set<DagNode>> dagNodeDependencies = new HashMap<>();
+
+    public DagGraphMemoryImpl(String name) {
+        this.name = name;
+    }
 
     @Override
     public boolean validateAcyclic() {
@@ -72,5 +79,10 @@ public class DagGraphMemoryImpl implements DagGraph {
     public void addEdge(DagNode from, DagNode to) {
         this.dagNodeDependencies.putIfAbsent(to, new HashSet<>());
         this.dagNodeDependencies.get(to).add(from);
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }
