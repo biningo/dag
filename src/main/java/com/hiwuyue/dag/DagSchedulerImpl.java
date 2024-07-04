@@ -8,12 +8,15 @@ import java.util.Set;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DagSchedulerImpl implements DagScheduler {
 
     private DagGraph dagGraph;
 
     private ThreadPoolExecutor executor;
+
+    private final AtomicBoolean running = new AtomicBoolean(false);
 
     public DagSchedulerImpl(DagGraph dagGraph) {
         this.dagGraph = dagGraph;
@@ -36,7 +39,11 @@ public class DagSchedulerImpl implements DagScheduler {
     }
 
     @Override
-    public void schedule() throws DagGraphValidationException {
+    public void start() throws DagGraphValidationException {
+        if (running.compareAndSet(false, true)) {
+            return;
+        }
+
         if (!dagGraph.validateAcyclic()) {
             throw new DagGraphValidationException();
         }
@@ -44,7 +51,7 @@ public class DagSchedulerImpl implements DagScheduler {
         Set<DagNode> nodes = dagGraph.getDagNodes();
         Map<DagNode, Set<DagNode>> nodeDependencies = dagGraph.getDagNodeDependencies();
 
-        while (true) {
+        while (this.running.get()) {
             ArrayList<DagNode> readyNodes = new ArrayList<>();
             int finishedCount = 0;
             for (DagNode node : nodes) {
@@ -85,6 +92,14 @@ public class DagSchedulerImpl implements DagScheduler {
             }
             ThreadUtil.sleepIgnoreInterrupt(10);
         }
+    }
+
+    @Override
+    public void stop() {
+        if (this.running.compareAndSet(true, false)) {
+            return;
+        }
+        ThreadUtil.shutdownExecutor(executor, 3, TimeUnit.SECONDS);
     }
 
     public DagGraph getDagGraph() {
