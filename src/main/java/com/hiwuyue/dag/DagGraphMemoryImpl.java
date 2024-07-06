@@ -1,6 +1,7 @@
 package com.hiwuyue.dag;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -35,9 +36,11 @@ public class DagGraphMemoryImpl implements DagGraph {
         });
 
         HashMap<DagNode, Set<DagNode>> nextNodes = new HashMap<>();
+        for (DagNode node : dagNodes) {
+            nextNodes.put(node, new HashSet<>());
+        }
         dagNodeDependencies.forEach((node, prevNodes) -> {
             for (DagNode prevNode : prevNodes) {
-                nextNodes.putIfAbsent(prevNode, new HashSet<>());
                 nextNodes.get(prevNode).add(node);
             }
         });
@@ -73,11 +76,11 @@ public class DagGraphMemoryImpl implements DagGraph {
     @Override
     public void addNode(DagNode node) {
         this.dagNodes.add(node);
+        this.dagNodeDependencies.putIfAbsent(node, new HashSet<>());
     }
 
     @Override
     public void addEdge(DagNode from, DagNode to) {
-        this.dagNodeDependencies.putIfAbsent(to, new HashSet<>());
         this.dagNodeDependencies.get(to).add(from);
     }
 

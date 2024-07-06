@@ -68,4 +68,14 @@ public class DagNode {
     public boolean isPending() {
         return this.getState() == DagNodeState.PENDING;
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.name.hashCode();
+    }
 }
