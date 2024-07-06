@@ -1,6 +1,5 @@
 package com.hiwuyue.dag;
 
-
 public class DagNode {
     private String name;
 
@@ -8,7 +7,8 @@ public class DagNode {
 
     private final DagTask task;
 
-    public DagNode(DagTask task) {
+    public DagNode(String name, DagTask task) {
+        this.name = name;
         this.task = task;
     }
 
