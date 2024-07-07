@@ -12,11 +12,12 @@ public class ShellDagTask implements DagTask {
 
     @Override
     public void run() throws Exception {
-        Process process = Runtime.getRuntime().exec(shellScript);
+        Process process = Runtime.getRuntime().exec(new String[] {"sh", "-c", shellScript});
         output = new String(process.getInputStream().readAllBytes());
         int exitCode = process.waitFor();
         if (exitCode != 0) {
-            throw new Exception("shell script run failed! exitCode=" + exitCode);
+            output = new String(process.getErrorStream().readAllBytes());
+            throw new Exception(String.format("shell script run failed! error=%s,exitCode=%d", output, exitCode));
         }
     }
 
