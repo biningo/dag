@@ -1,7 +1,6 @@
 package com.hiwuyue.dag;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -87,5 +86,23 @@ public class DagGraphMemoryImpl implements DagGraph {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public void removeNode(DagNode node) {
+        dagNodes.remove(node);
+        dagNodeDependencies.remove(node);
+        dagNodeDependencies.forEach((n, prevNodes) -> {
+            prevNodes.remove(node);
+        });
+    }
+
+    @Override
+    public void removeEdge(DagNode from, DagNode to) {
+        Set<DagNode> prevNodes = dagNodeDependencies.get(to);
+        if (prevNodes == null) {
+            return;
+        }
+        prevNodes.remove(from);
     }
 }

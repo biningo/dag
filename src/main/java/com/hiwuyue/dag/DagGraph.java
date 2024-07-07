@@ -14,5 +14,9 @@ public interface DagGraph {
 
     void addNode(DagNode node);
 
+    void removeNode(DagNode node);
+
     void addEdge(DagNode from, DagNode to);
+
+    void removeEdge(DagNode from, DagNode to);
 }
