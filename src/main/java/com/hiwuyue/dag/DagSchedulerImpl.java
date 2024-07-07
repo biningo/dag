@@ -18,6 +18,9 @@ public class DagSchedulerImpl implements DagScheduler {
 
     private final AtomicBoolean running = new AtomicBoolean(false);
 
+    private long startTime;
+    private long stopTime;
+
     public DagSchedulerImpl(DagGraph dagGraph) {
         this.dagGraph = dagGraph;
         setDefaultExecutor();
@@ -40,13 +43,15 @@ public class DagSchedulerImpl implements DagScheduler {
 
     @Override
     public void start() throws DagGraphValidationException {
-        if (running.compareAndSet(false, true)) {
+        if (!running.compareAndSet(false, true)) {
             return;
         }
 
         if (!dagGraph.validateAcyclic()) {
             throw new DagGraphValidationException();
         }
+
+        this.startTime = System.currentTimeMillis();
 
         Set<DagNode> nodes = dagGraph.getDagNodes();
         Map<DagNode, Set<DagNode>> nodeDependencies = dagGraph.getDagNodeDependencies();
@@ -90,17 +95,22 @@ public class DagSchedulerImpl implements DagScheduler {
             if (finishedCount == nodes.size()) {
                 break;
             }
-            ThreadUtil.sleepIgnoreInterrupt(10);
+
+            if (readyNodes.isEmpty()) {
+                ThreadUtil.sleepIgnoreInterrupt(10);
+            }
         }
         this.running.set(false);
+        this.stopTime = System.currentTimeMillis();
     }
 
     @Override
     public void stop() {
-        if (this.running.compareAndSet(true, false)) {
+        if (!this.running.compareAndSet(true, false)) {
             return;
         }
         ThreadUtil.shutdownExecutor(executor, 3, TimeUnit.SECONDS);
+        this.stopTime = System.currentTimeMillis();
     }
 
     public DagGraph getDagGraph() {
@@ -132,5 +142,10 @@ public class DagSchedulerImpl implements DagScheduler {
     @Override
     public boolean isRunning() {
         return running.get();
+    }
+
+    @Override
+    public long getDagTotalCostTime() {
+        return this.stopTime - this.startTime;
     }
 }

@@ -6,4 +6,6 @@ public interface DagScheduler {
     void stop();
 
     boolean isRunning();
+
+    long getDagTotalCostTime();
 }

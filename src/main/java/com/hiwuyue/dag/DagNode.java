@@ -7,6 +7,10 @@ public class DagNode {
 
     private final DagTask task;
 
+    private long startTime;
+
+    private long finishTime;
+
     public DagNode(String name, DagTask task) {
         this.name = name;
         this.task = task;
@@ -50,14 +54,17 @@ public class DagNode {
 
     public void start() {
         this.setState(DagNodeState.RUNNING);
+        this.startTime = System.currentTimeMillis();
     }
 
     public void success() {
         this.setState(DagNodeState.SUCCESSFUL);
+        this.finishTime = System.currentTimeMillis();
     }
 
     public void fail() {
         this.setState(DagNodeState.FAILED);
+        this.finishTime = System.currentTimeMillis();
     }
 
     public boolean isFinished() {
@@ -67,6 +74,14 @@ public class DagNode {
 
     public boolean isPending() {
         return this.getState() == DagNodeState.PENDING;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public long getFinishTime() {
+        return finishTime;
     }
 
     @Override
