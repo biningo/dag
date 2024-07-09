@@ -21,6 +21,10 @@ public class DagStats {
 
     private int failCount;
 
+    private int runningCount;
+
+    private int pendingCount;
+
     private int nodeCount;
 
     private int dagMaxConcurrency;
@@ -33,11 +37,15 @@ public class DagStats {
         Set<DagNode> nodes = dagGraph.getDagNodes();
         this.nodeCount = nodes.size();
         for (DagNode node : nodes) {
-            if (node.getState() == DagNodeState.SUCCESSFUL) {
-                this.successCount++;
-            }
-            if (node.getState() == DagNodeState.FAILED) {
-                this.failCount++;
+            switch (node.getState()){
+                case SUCCESSFUL:
+                    this.successCount++;break;
+                case FAILED:
+                    this.failCount++;break;
+                case PENDING:
+                    this.pendingCount++;break;
+                case RUNNING:
+                    this.runningCount++;break;
             }
 
             long costTime = node.getFinishTime() - node.getStartTime();
