@@ -87,9 +87,23 @@ public class DagSchedulerImpl implements DagScheduler {
                 }
             }
 
+            ArrayList<DagNode> waitingNodes = new ArrayList<>();
             for (DagNode readyNode : readyNodes) {
-                readyNode.start();
-                this.executor.execute(new DagNodeRunner(readyNode));
+                Set<DagNode> prevNodes = nodeDependencies.get(readyNode);
+                for (DagNode prevNode : prevNodes) {
+                    if (prevNode.isInterrupted()) {
+                        readyNode.interrupt();
+                        break;
+                    }
+                }
+                if (readyNode.getState() == DagNodeState.PENDING) {
+                    waitingNodes.add(readyNode);
+                }
+            }
+
+            for (DagNode waitingNode : waitingNodes) {
+                waitingNode.start();
+                this.executor.execute(new DagNodeRunner(waitingNode));
             }
 
             if (finishedCount == nodes.size()) {

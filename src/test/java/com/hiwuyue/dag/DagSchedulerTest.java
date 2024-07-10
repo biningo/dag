@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class DagSchedulerTest {
     @Test
-    public void testNodeStats() throws DagGraphValidationException {
+    public void testSchedulerCompleted() throws DagGraphValidationException {
         DagNode node1 = new DagNode("node1", new ShellDagTask("sleep 1 && echo -n node1"));
         DagNode node2 = new DagNode("node2", new ShellDagTask("sleep 1 && echo -n node2"));
         DagNode node3 = new DagNode("node3", new ShellDagTask("sleep 2 && echo -n node3"));

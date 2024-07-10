@@ -67,9 +67,18 @@ public class DagNode {
         this.finishTime = System.currentTimeMillis();
     }
 
+    public void interrupt() {
+        this.setState(DagNodeState.UNREACHABLE);
+    }
+
     public boolean isFinished() {
         DagNodeState state = this.getState();
         return state == DagNodeState.SUCCESSFUL || state == DagNodeState.FAILED || state == DagNodeState.UNREACHABLE;
+    }
+
+    public boolean isInterrupted() {
+        DagNodeState state = this.getState();
+        return state == DagNodeState.FAILED || state == DagNodeState.UNREACHABLE;
     }
 
     public boolean isPending() {
