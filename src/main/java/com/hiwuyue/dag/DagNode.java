@@ -69,7 +69,7 @@ public class DagNode {
 
     public boolean isFinished() {
         DagNodeState state = this.getState();
-        return state == DagNodeState.SUCCESSFUL || state == DagNodeState.FAILED;
+        return state == DagNodeState.SUCCESSFUL || state == DagNodeState.FAILED || state == DagNodeState.UNREACHABLE;
     }
 
     public boolean isPending() {

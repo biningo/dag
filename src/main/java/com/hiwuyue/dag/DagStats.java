@@ -25,6 +25,8 @@ public class DagStats {
 
     private int pendingCount;
 
+    private int unreachableCount;
+
     private int nodeCount;
 
     private int dagMaxConcurrency;
@@ -37,15 +39,22 @@ public class DagStats {
         Set<DagNode> nodes = dagGraph.getDagNodes();
         this.nodeCount = nodes.size();
         for (DagNode node : nodes) {
-            switch (node.getState()){
+            switch (node.getState()) {
                 case SUCCESSFUL:
-                    this.successCount++;break;
+                    this.successCount++;
+                    break;
                 case FAILED:
-                    this.failCount++;break;
+                    this.failCount++;
+                    break;
                 case PENDING:
-                    this.pendingCount++;break;
+                    this.pendingCount++;
+                    break;
                 case RUNNING:
-                    this.runningCount++;break;
+                    this.runningCount++;
+                    break;
+                case UNREACHABLE:
+                    this.unreachableCount++;
+                    break;
             }
 
             long costTime = node.getFinishTime() - node.getStartTime();
@@ -97,6 +106,18 @@ public class DagStats {
 
     public int getFailCount() {
         return failCount;
+    }
+
+    public int getRunningCount() {
+        return runningCount;
+    }
+
+    public int getPendingCount() {
+        return pendingCount;
+    }
+
+    public int getUnreachableCount() {
+        return unreachableCount;
     }
 
     public int getNodeCount() {
