@@ -1,4 +1,4 @@
-package com.hiwuyue.dag;
+package com.hiwuyue.dag.core;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,8 +30,8 @@ public class DagNodeTest {
 
     @Test
     public void testDagNodeRunTask() {
-        String output = "hello,world";
-        ShellDagTask dagTask = new ShellDagTask("echo -n hello,world");
+        String output = "hello,world\n";
+        ShellDagTask dagTask = new ShellDagTask("echo hello,world");
         DagNode node = new DagNode("node", dagTask);
         try {
             node.runTask();

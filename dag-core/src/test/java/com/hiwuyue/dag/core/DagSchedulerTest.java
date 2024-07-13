@@ -1,4 +1,4 @@
-package com.hiwuyue.dag;
+package com.hiwuyue.dag.core;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.hiwuyue.dag;
+package com.hiwuyue.dag.core;
 
 import java.util.HashSet;
 import java.util.Map;

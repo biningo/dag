@@ -1,4 +1,4 @@
-package com.hiwuyue.dag;
+package com.hiwuyue.dag.core;
 
 public interface DagScheduler {
     void start() throws DagGraphValidationException;
