@@ -49,7 +49,7 @@ public class DagSchedulerTest {
     }
 
     @Test
-    public void testSchedulerError() throws DagGraphValidationException {
+    public void testSchedulerUnFinished1() throws DagGraphValidationException {
         DagNode node1 = new DagNode("node1", new ShellDagTask("echo -n node1"));
         DagNode node2 = new DagNode("node2", new ShellDagTask("aaaa"));
         DagNode node3 = new DagNode("node3", new ShellDagTask("echo -n node3"));
@@ -79,6 +79,41 @@ public class DagSchedulerTest {
         Assert.assertEquals(6, dagStats.getNodeCount());
         Assert.assertEquals(3, dagStats.getSuccessCount());
         Assert.assertEquals(1, dagStats.getFailCount());
+        Assert.assertEquals(2, dagStats.getUnreachableCount());
+        Assert.assertEquals(0, dagStats.getPendingCount());
+    }
+
+    @Test
+    public void testSchedulerUnFinished2() throws DagGraphValidationException {
+        DagNode node1 = new DagNode("node1", new ShellDagTask("echo -n node1"));
+        DagNode node2 = new DagNode("node2", new ShellDagTask("error"));
+        DagNode node3 = new DagNode("node3", new ShellDagTask("error"));
+        DagNode node4 = new DagNode("node4", new ShellDagTask("echo -n node4"));
+        DagNode node5 = new DagNode("node5", new ShellDagTask("echo -n node5"));
+        DagNode node6 = new DagNode("node6", new ShellDagTask("echo -n node6"));
+
+        DagGraph dagGraph = new DagGraphMemoryImpl("g1");
+        dagGraph.addNode(node1);
+        dagGraph.addNode(node2);
+        dagGraph.addNode(node3);
+        dagGraph.addNode(node4);
+        dagGraph.addNode(node5);
+        dagGraph.addNode(node6);
+
+        dagGraph.addEdge(node1, node2);
+        dagGraph.addEdge(node1, node3);
+        dagGraph.addEdge(node2, node4);
+        dagGraph.addEdge(node3, node4);
+        dagGraph.addEdge(node4, node5);
+
+        DagScheduler scheduler = new DagSchedulerImpl(dagGraph);
+        scheduler.start();
+        DagStats dagStats = new DagStats(dagGraph);
+        dagStats.compute();
+        dagStats.setDagTotalCostTime(scheduler.getDagTotalCostTime());
+        Assert.assertEquals(6, dagStats.getNodeCount());
+        Assert.assertEquals(2, dagStats.getSuccessCount());
+        Assert.assertEquals(2, dagStats.getFailCount());
         Assert.assertEquals(2, dagStats.getUnreachableCount());
         Assert.assertEquals(0, dagStats.getPendingCount());
     }
