@@ -6,12 +6,12 @@ import org.junit.Test;
 public class DagSchedulerTest {
     @Test
     public void testSchedulerCompleted() throws DagGraphValidationException {
-        DagNode node1 = new DagNode("node1", new ShellDagTask("sleep 1 && echo -n node1"));
-        DagNode node2 = new DagNode("node2", new ShellDagTask("sleep 1 && echo -n node2"));
-        DagNode node3 = new DagNode("node3", new ShellDagTask("sleep 2 && echo -n node3"));
-        DagNode node4 = new DagNode("node4", new ShellDagTask("echo -n node4"));
-        DagNode node5 = new DagNode("node5", new ShellDagTask("echo -n node5"));
-        DagNode node6 = new DagNode("node6", new ShellDagTask("sleep 1 && echo -n node6"));
+        DagNode node1 = new DagNode("node1", new SimpleShellDagTask("sleep 1 && echo -n node1"));
+        DagNode node2 = new DagNode("node2", new SimpleShellDagTask("sleep 1 && echo -n node2"));
+        DagNode node3 = new DagNode("node3", new SimpleShellDagTask("sleep 2 && echo -n node3"));
+        DagNode node4 = new DagNode("node4", new SimpleShellDagTask("echo -n node4"));
+        DagNode node5 = new DagNode("node5", new SimpleShellDagTask("echo -n node5"));
+        DagNode node6 = new DagNode("node6", new SimpleShellDagTask("sleep 1 && echo -n node6"));
 
         DagGraph dagGraph = new DagGraphMemoryImpl("g1");
         dagGraph.addNode(node1);
@@ -50,12 +50,12 @@ public class DagSchedulerTest {
 
     @Test
     public void testSchedulerUnFinished1() throws DagGraphValidationException {
-        DagNode node1 = new DagNode("node1", new ShellDagTask("echo -n node1"));
-        DagNode node2 = new DagNode("node2", new ShellDagTask("aaaa"));
-        DagNode node3 = new DagNode("node3", new ShellDagTask("echo -n node3"));
-        DagNode node4 = new DagNode("node4", new ShellDagTask("echo -n node4"));
-        DagNode node5 = new DagNode("node5", new ShellDagTask("echo -n node5"));
-        DagNode node6 = new DagNode("node6", new ShellDagTask("echo -n node6"));
+        DagNode node1 = new DagNode("node1", new SimpleShellDagTask("echo -n node1"));
+        DagNode node2 = new DagNode("node2", new SimpleShellDagTask("aaaa"));
+        DagNode node3 = new DagNode("node3", new SimpleShellDagTask("echo -n node3"));
+        DagNode node4 = new DagNode("node4", new SimpleShellDagTask("echo -n node4"));
+        DagNode node5 = new DagNode("node5", new SimpleShellDagTask("echo -n node5"));
+        DagNode node6 = new DagNode("node6", new SimpleShellDagTask("echo -n node6"));
 
         DagGraph dagGraph = new DagGraphMemoryImpl("g1");
         dagGraph.addNode(node1);
@@ -85,12 +85,12 @@ public class DagSchedulerTest {
 
     @Test
     public void testSchedulerUnFinished2() throws DagGraphValidationException {
-        DagNode node1 = new DagNode("node1", new ShellDagTask("echo -n node1"));
-        DagNode node2 = new DagNode("node2", new ShellDagTask("error"));
-        DagNode node3 = new DagNode("node3", new ShellDagTask("error"));
-        DagNode node4 = new DagNode("node4", new ShellDagTask("echo -n node4"));
-        DagNode node5 = new DagNode("node5", new ShellDagTask("echo -n node5"));
-        DagNode node6 = new DagNode("node6", new ShellDagTask("echo -n node6"));
+        DagNode node1 = new DagNode("node1", new SimpleShellDagTask("echo -n node1"));
+        DagNode node2 = new DagNode("node2", new SimpleShellDagTask("error"));
+        DagNode node3 = new DagNode("node3", new SimpleShellDagTask("error"));
+        DagNode node4 = new DagNode("node4", new SimpleShellDagTask("echo -n node4"));
+        DagNode node5 = new DagNode("node5", new SimpleShellDagTask("echo -n node5"));
+        DagNode node6 = new DagNode("node6", new SimpleShellDagTask("echo -n node6"));
 
         DagGraph dagGraph = new DagGraphMemoryImpl("g1");
         dagGraph.addNode(node1);

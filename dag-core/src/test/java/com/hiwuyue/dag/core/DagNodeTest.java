@@ -7,14 +7,14 @@ public class DagNodeTest {
 
     @Test
     public void testDagNodeEqual() {
-        DagNode node1 = new DagNode("node", new ShellDagTask("echo -n 'hello,world'"));
-        DagNode node2 = new DagNode("node", new ShellDagTask("echo -n 'hello,world'"));
+        DagNode node1 = new DagNode("node", new SimpleShellDagTask("echo -n 'hello,world'"));
+        DagNode node2 = new DagNode("node", new SimpleShellDagTask("echo -n 'hello,world'"));
         Assert.assertEquals(node1, node2);
     }
 
     @Test
     public void testDagNodeState() {
-        DagNode node = new DagNode("node", new ShellDagTask("echo -n 'hello,world'"));
+        DagNode node = new DagNode("node", new SimpleShellDagTask("echo -n 'hello,world'"));
         Assert.assertTrue(node.isPending());
         node.start();
         Assert.assertFalse(node.isPending());
@@ -31,7 +31,7 @@ public class DagNodeTest {
     @Test
     public void testDagNodeRunTask() {
         String output = "hello,world\n";
-        ShellDagTask dagTask = new ShellDagTask("echo hello,world");
+        SimpleShellDagTask dagTask = new SimpleShellDagTask("echo hello,world");
         DagNode node = new DagNode("node", dagTask);
         try {
             node.runTask();

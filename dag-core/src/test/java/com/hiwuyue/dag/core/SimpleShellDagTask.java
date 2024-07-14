@@ -1,12 +1,12 @@
 package com.hiwuyue.dag.core;
 
-public class ShellDagTask implements DagTask {
+public class SimpleShellDagTask implements DagTask {
 
     private final String shellScript;
 
     private String output;
 
-    public ShellDagTask(String shellScript) {
+    public SimpleShellDagTask(String shellScript) {
         this.shellScript = shellScript;
     }
 
