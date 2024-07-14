@@ -1,5 +1,6 @@
 package com.hiwuyue.dag.core;
 
+import com.hiwuyue.dag.core.exception.DagGraphValidationException;
 import org.junit.Assert;
 import org.junit.Test;
 

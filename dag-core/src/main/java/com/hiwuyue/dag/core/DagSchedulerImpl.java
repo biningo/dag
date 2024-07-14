@@ -1,6 +1,7 @@
 package com.hiwuyue.dag.core;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.hiwuyue.dag.core.exception.DagGraphValidationException;
 import com.hiwuyue.dag.core.utils.ThreadUtil;
 import java.util.ArrayList;
 import java.util.Map;
