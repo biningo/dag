@@ -23,6 +23,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>com.hiwuyue.dag</groupId>
+                <artifactId>dag-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>

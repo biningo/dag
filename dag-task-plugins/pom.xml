@@ -17,6 +17,15 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.hiwuyue.dag</groupId>
+            <artifactId>dag-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 
