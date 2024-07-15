@@ -16,18 +16,6 @@ public class DagNode {
         this.task = task;
     }
 
-    @Override
-    public boolean equals(Object outer) {
-        if (outer == this) {
-            return true;
-        }
-        if (!(outer instanceof DagNode)) {
-            return false;
-        }
-        DagNode outerNode = (DagNode) outer;
-        return this.name.equals(outerNode.name);
-    }
-
     public synchronized void setState(DagNodeState state) {
         this.state = state;
     }
@@ -96,6 +84,18 @@ public class DagNode {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    @Override
+    public boolean equals(Object outer) {
+        if (outer == this) {
+            return true;
+        }
+        if (!(outer instanceof DagNode)) {
+            return false;
+        }
+        DagNode outerNode = (DagNode) outer;
+        return this.name.equals(outerNode.name);
     }
 
     @Override
