@@ -43,7 +43,7 @@ public class DagSchedulerImpl implements DagScheduler {
     }
 
     @Override
-    public void start() throws DagGraphValidationException {
+    public void run() throws DagGraphValidationException {
         if (!running.compareAndSet(false, true)) {
             return;
         }
@@ -120,7 +120,7 @@ public class DagSchedulerImpl implements DagScheduler {
     }
 
     @Override
-    public void stop() {
+    public void shutdown() {
         if (!this.running.compareAndSet(true, false)) {
             return;
         }

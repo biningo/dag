@@ -3,9 +3,9 @@ package com.hiwuyue.dag.core;
 import com.hiwuyue.dag.core.exception.DagGraphValidationException;
 
 public interface DagScheduler {
-    void start() throws DagGraphValidationException;
+    void run() throws DagGraphValidationException;
 
-    void stop();
+    void shutdown();
 
     boolean isRunning();
 

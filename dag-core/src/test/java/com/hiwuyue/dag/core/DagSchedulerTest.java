@@ -29,7 +29,7 @@ public class DagSchedulerTest {
         dagGraph.addEdge(node4, node5);
 
         DagScheduler scheduler = new DagSchedulerImpl(dagGraph);
-        scheduler.start();
+        scheduler.run();
 
         DagStats dagStats = new DagStats(dagGraph);
         dagStats.compute();
@@ -73,7 +73,7 @@ public class DagSchedulerTest {
         dagGraph.addEdge(node4, node5);
 
         DagScheduler scheduler = new DagSchedulerImpl(dagGraph);
-        scheduler.start();
+        scheduler.run();
         DagStats dagStats = new DagStats(dagGraph);
         dagStats.compute();
         dagStats.setDagTotalCostTime(scheduler.getDagTotalCostTime());
@@ -108,7 +108,7 @@ public class DagSchedulerTest {
         dagGraph.addEdge(node4, node5);
 
         DagScheduler scheduler = new DagSchedulerImpl(dagGraph);
-        scheduler.start();
+        scheduler.run();
         DagStats dagStats = new DagStats(dagGraph);
         dagStats.compute();
         dagStats.setDagTotalCostTime(scheduler.getDagTotalCostTime());
